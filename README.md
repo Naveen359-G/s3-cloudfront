@@ -140,35 +140,35 @@ Verify that the website loads correctly.
 Step 1: Create an IAM Role
 Go to the IAM Console - Sign in to the AWS Management Console and navigate to the Identity and Access Management (IAM) service.
 
-Choose Roles - Click on "Roles" in the left-hand panel.
+- Choose Roles - Click on "Roles" in the left-hand panel.
 
-Create Role - Click "Create role."
+- Create Role - Click "Create role."
 
-Select EC2 - Choose the service that will use this role (EC2 in this case) and click "Next."
+- Select EC2 - Choose the service that will use this role (EC2 in this case) and click "Next."
 
-Attach Policies - Select the policies that grant access to the necessary S3 resources. For instance, "AmazonS3ReadOnlyAccess" provides read-only access to S3. You can create a custom policy for more specific access.
+- Attach Policies - Select the policies that grant access to the necessary S3 resources. For instance, "AmazonS3ReadOnlyAccess" provides read-only access to S3. You can create a custom policy for more specific access.
 
-Add Tags (Optional) - Optionally, add any relevant tags. Click "Next."
+- Add Tags (Optional) - Optionally, add any relevant tags. Click "Next."
 
-Name and Review - Give the role a descriptive name and review the role policy to ensure it aligns with the necessary S3 access requirements.
+- Name and Review - Give the role a descriptive name and review the role policy to ensure it aligns with the necessary S3 access requirements.
 
-Create Role - Click "Create role."
+- Create Role - Click "Create role."
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Step 2: Attach IAM Role to EC2 Instance
 Go to EC2 Console - Navigate to the EC2 Dashboard.
 
-Select Instance - Choose the EC2 instance you want to grant access to.
+- Select Instance - Choose the EC2 instance you want to grant access to.
 
-Actions > Instance Settings > Attach/Replace IAM Role - Click on "Actions," go to "Instance Settings," and select "Attach/Replace IAM Role."
+- Actions => Instance Settings => Attach/Replace IAM Role - Click on "Actions," go to "Instance Settings," and select "Attach/Replace IAM Role."
 
-Choose IAM Role - Select the IAM role you created in Step 1 from the dropdown menu.
+- Choose IAM Role - Select the IAM role you created in Step 1 from the dropdown menu.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Step 3: Verify S3 Access
 SSH into EC2 Instance - Use SSH to connect to the EC2 instance.
 
-Test Access - Use AWS Command Line Interface (CLI) or SDKs within the EC2 instance to verify S3 access. For instance, you can run aws s3 ls to list buckets.
+=> Test Access - Use AWS Command Line Interface (CLI) or SDKs within the EC2 instance to verify S3 access. For instance, you can run aws s3 ls to list buckets.
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
