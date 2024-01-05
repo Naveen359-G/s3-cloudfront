@@ -36,20 +36,8 @@ Create a Bucket:
 - Set permissions for public read access.
 
 json:
+Check the code in this repository.
 
-- {
--     "Version": "2012-10-17",
--     "Statement": [
--        {
--            "Effect": "Allow",
--            "Principal": {
--                "Service": "cloudfront.amazonaws.com"
--            },
--            "Action": "s3:GetObject",
--            "Resource": "arn:aws:s3:::[Your-S3-Bucket]/*"
--        }
--    ]
-- }
 
 - Create S3 bucket
 
