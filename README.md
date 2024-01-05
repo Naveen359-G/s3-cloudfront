@@ -1,11 +1,13 @@
                                                                   # S3-CloudFront
-Static website deployment with AWS S3 and CloudFront
+Static website deployment with AWS S3 and CloudFront | Configure S3 file upload notification system
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                                                    Introduction:
 In this tutorial, I will guide you through the process of hosting a static website using Amazon S3 for storage and Amazon CloudFront as a content delivery network (CDN). 
 This setup will improve the performance, scalability, and availability of your website.
+
+And, configuring S3 file upload notification system using SNS, SQS, Lambda function, IAM services
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -172,8 +174,96 @@ SSH into EC2 Instance - Use SSH to connect to the EC2 instance.
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+====================================================================================================================================================================================================================
+=> Configure S3 file upload nofication service:
+====================================================================================================================================================================================================================
+
+Steps to follow:
+1. Create S3 bucket
+2. Create SNS Topic
+3. Create SQS Queue
+4. Setup Lambda Function
+   - Create Lambda function
+   - Grant permissions
+   - Write Lambda function code
+5. Configure S3 event trigger
+6. Test the notification system
+7. Examine logs using AWS CloudWatch
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Creating a File Upload Notification System using Amazon Web Services. The system will monitor the S3 bucket for new file uploads, activate a Lambda function to handle the uploaded files, 
+send a notification using Simple Notification Service (SNS), and save details in a Simple Queue Service (SQS) queue for later processing.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Create S3 Bucket:
+   
+=> log in to the AWS Management Console and navigate to the Amazon S3 service. 
+  - Click on the "Create bucket" button and provide a unique and globally-unique name for the bucket.
+  - Choose the appropriate AWS Region and leave the other options at their default values.
+  - Once the bucket is created, it will serve as the storage location for the uploaded files.
+* We will be adding an S3 event rule to this bucket later.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2. Create a SNS Topic:
+   - Navigate to the SNS service. Create a new SNS topic. Which will be used for sending notifications. Select Standard, does not care about the order.
+   - Subscribe the topic to an email address. Choose the email protocol, enter the endpoint email. 
+   - Activate the subscription by confirming the provided email. (This step ensures that notifications are sent to the specified email.)
+   
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3. Create a SQS Queue:
+   - Navigate SQS dashboard, click on the "Create Queue" button.
+   - Create a new SQS queue. Choose the queue type based on your requirements. In this case, select the "Standard Queue" option. 
+     (Standard queues provide at-least-once delivery of messages, making them suitable for scenarios where occasional duplication of messages is acceptable.)
+   * Depending on your specific requirements, you may adjust additional settings such as the message retention period and visibility timeout.
+     This queue functions as a dedicated repository for storing metadata associated with uploaded files.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4. Setupi Lambda Function:
+   =>  Navigate to Lambda service. Create a new Lambda function, selecting the Python 3.12 runtime environment.
+   =>  Grant permissions:
+     Navigate to 'Confiuration', check for permission tab on the right side to the console. Lambda functions need specific permissions to interact with other AWS services.
+
+
+   - Navigate to IAM console, check for the < Lambdafunction_name > Add permissions for AmazonSNSFullAccess  | AmazonSQSFullAccess
+     AWS provides execution roles to manage these permissions. Grant permissions to read from the S3 bucket, write to the SQS queue, and publish to SNS.
+
+   * Giving specific and limited permissions to your Lambda function makes it more secure. It means the function only gets the exact rights it requires, following the principle of least privilege.
+     
+   => Write Lambda Function Code:
+   - When a new file is uploaded to an S3 bucket, this function is triggered. It extracts information about the uploaded file,
+     such as the bucket name and file key. You can customize the processing logic for your specific needs.
+   - After processing, the function sends a success notification using Amazon SNS (Simple Notification Service) to a specified topic.
+     Additionally, it stores metadata related to the processed file in an Amazon SQS (Simple Queue Service) queue for further handling or analysis.
+     This Lambda function orchestrates the notification system, connecting various AWS services seamlessly.
+
+   -->   Check the code for the Lambda function in this repository.
+   -  After defining the function code, deploy your Lambda function by clicking on the "Deploy" button.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Configure S3 Event Trigger: 
+   - Navigate to S3--> Properties --> Event Notifications
+   - -> Create event notification -> Enter a test name --scroll down--> enable the Lambda function --> Save changes.
+* Configuring the S3 event trigger establishes a seamless connection between your S3 bucket and the Lambda function.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6.  Test the notification system:
+ - Navigate to S3 service, upload any file.
+ - Confirm that you receive a notification as configured, through the chosen SNS protocol (e.g., email).
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+7. Examine logs using AWS CloudWatch:
+* To gain deeper insights into the execution of your Lambda function and identify potential issues or optimizations, AWS CloudWatch provides a comprehensive log monitoring solution.
+
+  - Navigate to the CloudWatch service. Look for a log group related to your Lambda function.
+  - Log groups are organized by AWS service and function name. Open the log stream to view log events generated during the execution of your Lambda function.
+  - Each log event provides information about the function's behavior, including any print statements or errors.
+
+=> Navigate to SQS --> send and receive messages -->  Check for poll for messages.
+
+====================================================================================================================================================================================================================
+* The S3 File Upload Notification System project effectively integrates AWS services, orchestrating a seamless workflow from file uploads to notifications and metadata storage.
+* Configuring S3 event triggers, testing the system, and examining logs using AWS CloudWatch ensures reliability and provides ongoing monitoring capabilities.
+* This simple task offers a concise blueprint for building responsive and scalable systems on the AWS cloud infrastructure, catering to diverse applications across industries.
+====================================================================================================================================================================================================================
+
+
 
 
 
